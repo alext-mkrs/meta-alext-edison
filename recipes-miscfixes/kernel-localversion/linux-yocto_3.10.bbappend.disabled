@@ -1,0 +1,8 @@
+# setting to the same string as the official one - needed only if you
+# removed the do_* override in meta-edison/recipes-kernel/linux/linux*.bbappend
+LINUX_VERSION_EXTENSION = "-poky-edison+"
+KERNEL_EXTRA_FEATURES_remove = "features/netfilter/netfilter.scc"
+
+#FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+
+#SRC_URI += "file://set_localversion.cfg"

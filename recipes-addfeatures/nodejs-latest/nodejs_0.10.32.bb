@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=4a31e6c424761191227143b86f58a1ef"
 
 DEPENDS = "openssl"
 
-SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.10;tag=v0.10.30"
+SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.10;tag=v0.10.32"
 
 S = "${WORKDIR}/git"
 
