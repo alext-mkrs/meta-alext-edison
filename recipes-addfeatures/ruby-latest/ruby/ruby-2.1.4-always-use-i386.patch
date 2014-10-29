@@ -1,0 +1,13 @@
+diff --git a/configure.in b/configure.in
+index bb1ab8a..3f2cd97 100644
+--- a/configure.in
++++ b/configure.in
+@@ -3817,6 +3817,8 @@ AC_SUBST(vendorarchdir)dnl
+ 
+ AC_SUBST(configure_args, "`echo "${ac_configure_args}" | sed 's/\\$/$$/g'`")dnl
+ 
++target_cpu=`echo $target_cpu | sed s/i.86/i386/`
++
+ if test "${universal_binary-no}" = yes ; then
+     arch="universal-${target_os}"
+     AC_CACHE_CHECK(whether __ARCHITECTURE__ is available, rb_cv_architecture_available,
