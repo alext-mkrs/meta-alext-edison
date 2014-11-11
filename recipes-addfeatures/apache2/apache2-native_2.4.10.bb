@@ -6,6 +6,8 @@ DEPENDS = "expat-native pcre-native apr-native apr-util-native"
 SECTION = "net"
 LICENSE = "Apache-2.0"
 
+PR = "r1"
+
 inherit autotools pkgconfig native
 
 SRC_URI = "http://www.apache.org/dist/httpd/httpd-${PV}.tar.bz2 \
