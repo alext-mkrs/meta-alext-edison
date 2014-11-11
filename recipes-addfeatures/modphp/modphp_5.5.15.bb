@@ -1,5 +1,7 @@
 include modphp5.inc
 
+PR = "${INC_PR}.0"
+
 EXTRA_OECONF += "--disable-opcache"
 
 SRC_URI[md5sum] = "5cb5f2ed9099299f8a4c952d59d93812"

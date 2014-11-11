@@ -8,13 +8,20 @@ SRC_URI = "http://www.php.net/distributions/php-${PV}.tar.bz2 \
            file://configure.patch \
            file://pthread-check-threads-m4.patch \
            file://70_mod_php5.conf \
+           file://0001-using-pkgconfig-to-check-libxml.patch \
+           file://php-CVE-2014-5120.patch \
+           file://php-CVE-2014-3587.patch \
+           file://php-CVE-2014-3597.patch \
 "
 
 S = "${WORKDIR}/php-${PV}"
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=52dd90569008fee5bcdbb22d945b1108"
 
-inherit autotools
+inherit autotools pkgconfig
+
+PNBLACKLIST[modphp] = "CONFLICT: 466 header files conflict with php"
+# e.g. sysroots/qemux86-64/usr/include/php/main/win95nt.h
 
 CFLAGS += " -g -DPTYS_ARE_GETPT -DPTYS_ARE_SEARCHED -I${STAGING_INCDIR}/apache2"
 
@@ -32,7 +39,6 @@ EXTRA_OECONF = "--with-apxs2=${STAGING_BINDIR_CROSS}/apxs \
                 --disable-xmlreader \
                 --disable-xmlwriter \
                 --disable-simplexml \
-                --disable-libxml \
                 --disable-dom \
                 --disable-rpath \
                 --libdir=${libdir}/php5 \
@@ -47,6 +53,8 @@ EXTRA_OECONF = "--with-apxs2=${STAGING_BINDIR_CROSS}/apxs \
 PACKAGECONFIG ??= "mysql"
 PACKAGECONFIG[mysql] = "--with-mysqli=${STAGING_BINDIR_CROSS}/mysql_config,--without-mysqli,mysql5"
 PACKAGECONFIG[pgsql] = "--with-pgsql=${STAGING_DIR_TARGET}${exec_prefix},--without-pgsql,mysql5"
+PACKAGECONFIG[libxml] = "--enable-libxml,--disable-libxml,libxml2"
+PACKAGECONFIG[soap] = "--enable-libxml --enable-soap, --disable-soap, libxml2"
 
 acpaths = ""
 
