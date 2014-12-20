@@ -11,8 +11,8 @@ DEPENDS = "tslib audiofile"
 # The options should be mutually exclusive for configuration script.
 # If both alsa and pulseaudio are specified (as in the default distro features)
 # pulseaudio takes precedence.
-PACKAGECONFIG_ALSA = "${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '', d)}"
-PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '${PACKAGECONFIG_ALSA}', d)}"
+PACKAGECONFIG_PULSEAUDIO = "${@base_contains('DISTRO_FEATURES', 'pulseaudio', 'pulseaudio', '', d)}"
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'alsa', 'alsa', '${PACKAGECONFIG_PULSEAUDIO}', d)}"
 PACKAGECONFIG[pulseaudio] = "--with-default-audio=pulse,,pulseaudio"
 PACKAGECONFIG[alsa] = "--with-default-audio=alsa,,alsa-lib"
 PACKAGECONFIG[sdl] = ",,libsdl"
@@ -47,5 +47,6 @@ EXTRA_OECONF = " \
     --with-module-suffix=.so \
     ${@bb.utils.contains('TUNE_FEATURES', 'neon', '--with-cpu=neon', '', d)} \
     ${@bb.utils.contains('TUNE_FEATURES', 'altivec', '--with-cpu=altivec', '', d)} \
+    ${@bb.utils.contains('TUNE_FEATURES', 'core2', '--with-cpu=sse --enable-int-quality', '', d)} \
 "
 
