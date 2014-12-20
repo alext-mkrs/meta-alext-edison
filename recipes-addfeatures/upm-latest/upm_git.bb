@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e8db6501ed294e65418a933925d12058"
 DEPENDS = "nodejs swig-native mraa"
 
 SRC_URI = "git://github.com/intel-iot-devkit/upm.git;protocol=https"
-SRCREV = "AUTOINC"
+SRCREV = "${AUTOREV}"
 
 PV = "0.1.8+git${SRCPV}"
 
