@@ -3,6 +3,8 @@ HOMEPAGE = "http://ngspice.sourceforge.net"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=756965e8cd0fbaca1738b60a069a19f8"
 
+DEPENDS = "libxaw"
+
 PR = "r0"
 
 SRC_URI = "http://downloads.sourceforge.net/project/${PN}/ng-spice-rework/${PV}/${PN}-${PV}.tar.gz"
