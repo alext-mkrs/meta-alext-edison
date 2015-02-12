@@ -10,7 +10,7 @@ DEPENDS = "nodejs swig-native mraa"
 SRC_URI = "git://github.com/intel-iot-devkit/upm.git;protocol=https"
 SRCREV = "${AUTOREV}"
 
-PV = "0.1.8+git${SRCPV}"
+PV = "0.1.9+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
