@@ -72,7 +72,7 @@ EXTRA_OECONF_class-native = " \
                 ${COMMON_EXTRA_OECONF} \
 "
 
-PACKAGECONFIG ??= "apache2 mysql sqlite3 imap \
+PACKAGECONFIG ??= "apache2 mysql sqlite3 imap soap \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG_class-native = ""
 
