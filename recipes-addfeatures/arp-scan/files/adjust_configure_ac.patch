@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index a2a2e2c..9503a8c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -108,6 +108,7 @@ dnl snprintfs that use %lld, %qd, or %I64d as the format.
+ dnl
+ if test "$HAVE_LONG_LONG_INT_64" = yes ; then
+   PGAC_FUNC_SNPRINTF_LONG_LONG_INT_FORMAT
++  LONG_LONG_INT_FORMAT="%lld"
+   if test "$LONG_LONG_INT_FORMAT" = ""; then
+     AC_MSG_ERROR([cannot determine snprintf format string for long long int])
+   fi
+
