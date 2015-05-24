@@ -6,8 +6,6 @@ DEPENDS = "libtool-native apache2-native openssl expat pcre apr apr-util"
 SECTION = "net"
 LICENSE = "Apache-2.0"
 
-PR = "r1"
-
 SRC_URI = "http://www.apache.org/dist/httpd/httpd-${PV}.tar.bz2 \
            file://server-makefile.patch \
            file://httpd-2.4.1-corelimit.patch \
@@ -19,15 +17,16 @@ SRC_URI = "http://www.apache.org/dist/httpd/httpd-${PV}.tar.bz2 \
            file://httpd-2.4.3-fix-race-issue-of-dir-install.patch \
            file://npn-patch-2.4.7.patch \
            file://0001-configure-use-pkg-config-for-PCRE-detection.patch \
+           file://configure-allow-to-disable-selinux-support.patch \
            file://init \
            file://apache2-volatile.conf \
            file://apache2.service \
-           file://apache-CVE-2014-0117.patch \
+           file://0001-SECURITY-CVE-2015-0228-cve.mitre.org.patch \
           "
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=dbff5a2b542fa58854455bf1a0b94b83"
-SRC_URI[md5sum] = "44543dff14a4ebc1e9e2d86780507156"
-SRC_URI[sha256sum] = "176c4dac1a745f07b7b91e7f4fd48f9c48049fa6f088efe758d61d9738669c6a"
+SRC_URI[md5sum] = "b8dc8367a57a8d548a9b4ce16d264a13"
+SRC_URI[sha256sum] = "ad6d39edfe4621d8cc9a2791f6f8d6876943a9da41ac8533d77407a2e630eae4"
 
 S = "${WORKDIR}/httpd-${PV}"
 
@@ -59,6 +58,9 @@ EXTRA_OECONF = "--enable-ssl \
     ap_cv_void_ptr_lt_long=no \
     --enable-mpms-shared \
     ac_cv_have_threadsafe_pollset=no"
+
+PACKAGECONFIG ?= "${@base_contains('DISTRO_FEATURES', 'selinux', 'selinux', '', d)}"
+PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux,libselinux"
 
 do_install_append() {
     install -d ${D}/${sysconfdir}/init.d
