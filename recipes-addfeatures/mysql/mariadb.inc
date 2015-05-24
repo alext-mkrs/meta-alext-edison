@@ -11,11 +11,11 @@ SRC_URI = "http://mirror.stshosting.co.uk/mariadb/mariadb-${PV}/source/mariadb-$
            file://my.cnf \
            file://mysqld.service \
            file://configure.cmake-fix-valgrind.patch \
-           file://revert-fix-for-MDEV-5120.patch \
+           file://fix-a-building-failure.patch \
           "
 
-SRC_URI[md5sum] = "561bede89a8bd19c374dad2d8f24fdfe"
-SRC_URI[sha256sum] = "cbde17f4a31483143490def6fcce33310ebae49eafe92dc4ada0e7227202415a"
+SRC_URI[md5sum] = "c8760d6b5890fc1de76c07af48092c88"
+SRC_URI[sha256sum] = "a0709997140549154edb87c9dfab564cd4755b238251acbf42369118f9bb4d01"
 
 S = "${WORKDIR}/mariadb-${PV}"
 
@@ -129,6 +129,7 @@ pkg_postinst_${PN}-server () {
 
     mysql_install_db --basedir=${prefix} --user=mysql
 
+    [ -x /sbin/restorecon ] && /sbin/restorecon -RF /var/lib/mysql
 }
 
 PACKAGES = "${PN}-dbg ${PN} \
@@ -148,7 +149,8 @@ RDEPENDS_${PN}-client = "perl perl-module-getopt-long perl-module-file-temp \
     perl-module-exporter"
 RDEPENDS_${PN}-server = "perl perl-module-getopt-long perl-module-data-dumper \
     perl-module-file-basename perl-module-file-path perl-module-sys-hostname \
-    perl-module-file-copy perl-module-file-temp perl-module-posix"
+    perl-module-file-copy perl-module-file-temp perl-module-posix \
+    ${PN}-client"
 RDEPENDS_${PN}-leftovers = "perl perl-module-cwd perl-module-benchmark perl-module-getopt-long \
     perl-module-posix perl-module-data-dumper perl-module-sigtrap perl-module-threads \
     perl-module-threads-shared perl-module-io-socket perl-module-sys-hostname perl-module-file-copy \
