@@ -1,0 +1,27 @@
+From 3ae1badae7a05e0982e0dfbcb078da3d4b92a81d Mon Sep 17 00:00:00 2001
+From: Andy Green <andy.green@linaro.org>
+Date: Wed, 29 Apr 2015 14:40:55 +0000
+Subject: cmake remove targets from install path
+
+No package on my machine populates cmake files, I think it's extraneous.
+
+Signed-off-by: Andy Green <andy.green@linaro.org>
+---
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 122ce41..43630f7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -917,10 +917,6 @@ if (NOT LWS_WITHOUT_TESTAPPS AND NOT LWS_WITHOUT_SERVER)
+ 			COMPONENT examples)
+ endif()
+ 
+-# Install exports for the install-tree.
+-install(EXPORT LibwebsocketsTargets
+-		DESTINATION "${LWS_INSTALL_CMAKE_DIR}" COMPONENT dev)
+-
+ # build subdir is not part of sources
+ set(CPACK_SOURCE_IGNORE_FILES $(CPACK_SOURCE_IGNORE_FILES) ".git" "build" "tgz" "tar.gz")
+ 
+--
+cgit v0.9.2
+
