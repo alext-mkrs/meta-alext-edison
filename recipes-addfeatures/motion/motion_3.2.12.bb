@@ -16,4 +16,4 @@ SRC_URI[sha256sum] = "a597f8d7ec0bf3c5fb62722c4eead59717fe01c2ae0d256c642027cea7
 
 FILES_${PN} += "${datadir}/${PN}-${PV}"
 
-inherit autotools gettext
+inherit autotools-brokensep gettext

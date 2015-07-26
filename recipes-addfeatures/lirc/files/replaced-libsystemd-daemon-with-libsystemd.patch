@@ -1,6 +1,6 @@
-From 83a0b7785cd5a7bc5393663e185f42c330f46f4b Mon Sep 17 00:00:00 2001
+From 0f5f135e4346c74c3b7bb327e7b590954cf1030d Mon Sep 17 00:00:00 2001
 From: Alex T <alext.mkrs@gmail.com>
-Date: Mon, 10 Nov 2014 16:21:45 +0100
+Date: Sun, 26 Jul 2015 15:30:21 +0200
 Subject: [PATCH] Replaced libsystemd-daemon with libsystemd
 
 ---
@@ -8,18 +8,18 @@ Subject: [PATCH] Replaced libsystemd-daemon with libsystemd
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 72c512d..00460b7 100644
+index 1d23418..d925cff 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -420,7 +420,7 @@ AC_CHECK_HEADERS(linux/i2c-dev.h,[
-   ]
+@@ -297,7 +297,7 @@ AC_CHECK_HEADERS(linux/i2c-dev.h,[
  )
  
--PKG_CHECK_MODULES([SYSTEMD],[libsystemd-daemon],[AC_DEFINE(HAVE_SYSTEMD)],[true])
-+PKG_CHECK_MODULES([SYSTEMD],[libsystemd],[AC_DEFINE(HAVE_SYSTEMD)],[true])
- CFLAGS="$CFLAGS $SYSTEMD_CFLAGS"
- LIBS="$LIBS $SYSTEMD_LIBS"
  
+-PKG_CHECK_MODULES([SYSTEMD],[libsystemd-daemon],,[true])
++PKG_CHECK_MODULES([SYSTEMD],[libsystemd],,[true])
+ if test -n "$SYSTEMD_LIBS"; then
+     CFLAGS="$CFLAGS $SYSTEMD_CFLAGS"
+     AC_DEFINE(HAVE_SYSTEMD)
 -- 
 1.7.9.5
 
