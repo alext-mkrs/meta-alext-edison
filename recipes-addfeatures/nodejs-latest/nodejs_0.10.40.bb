@@ -9,7 +9,7 @@ DEPENDS_class-target = "nodejs-native"
 
 PR = "r1"
 
-SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.10;tag=v0.10.38"
+SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.10;tag=v0.10.40"
 
 S = "${WORKDIR}/git"
 
