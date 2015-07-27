@@ -11,7 +11,8 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f2566bb12b16d2d80d90ebc533261aa7"
 RDEPENDS_${PN} = "perl"
 
-SRC_URI = "http://jaist.dl.sourceforge.net/project/${BPN}/${BP}/${BP}.tar.gz"
+SRC_URI = "http://downloads.sourceforge.net/project/${BPN}/${BP}/${BP}.tar.gz"
+
 SRC_URI[md5sum] = "a0c3d8721f877bdcd4a9089eb1b4691b"
 SRC_URI[sha256sum] = "35ec31f9fe981aaa727b144ab3ff2eb655997d8ccabaf66586458f5dfc3a56eb"
 
@@ -36,7 +37,6 @@ do_install() {
 
     install -m 0755 -d ${D}${sysconfdir}/cron.daily
     install -m 0755 -d ${D}${sbindir}
-    ln -sf ../..${datadir}/logwatch/scripts/logwatch.pl ${D}${sysconfdir}/cron.daily/0logwatch
     ln -sf ../..${datadir}/logwatch/scripts/logwatch.pl ${D}${sbindir}/logwatch
     cat > ${D}${sysconfdir}/cron.daily/0logwatch <<EOF
     DailyReport=\`grep -e "^[[:space:]]*DailyReport[[:space:]]*=[[:space:]]*" /usr/share/logwatch/default.conf/logwatch.conf | head -n1 | sed -e "s|^\s*DailyReport\s*=\s*||"\`
