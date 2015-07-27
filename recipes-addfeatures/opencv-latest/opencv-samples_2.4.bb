@@ -1,4 +1,4 @@
-DESCRIPTION = "Opencv : The Open Computer Vision Library"
+SUMMARY = "Opencv : The Open Computer Vision Library"
 HOMEPAGE = "http://opencv.willowgarage.com/wiki/"
 SECTION = "libs"
 LICENSE = "BSD"
@@ -7,14 +7,12 @@ DEPENDS = "opencv"
 
 LIC_FILES_CHKSUM = "file://include/opencv2/opencv.hpp;endline=41;md5=6d690d8488a6fca7a2c192932466bb14 \
 "
+SRCREV = "6fae07ba8867b8fd2c53344a774aab669afa7c5e"
+SRC_URI = "git://github.com/Itseez/opencv.git;branch=2.4 \
+          "
+PV = "2.4.3+git${SRCPV}"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/opencvlibrary/opencv-unix/${PV}/opencv-${PV}.zip \
-"
-
-SRC_URI[md5sum] = "7f958389e71c77abdf5efe1da988b80c"
-SRC_URI[sha256sum] = "803010848154988e9cbda8b3fa857fcbb27382c2946ed729e1a7e40600bb4c71"
-
-S = "${WORKDIR}/opencv-${PV}"
+S = "${WORKDIR}/git"
 
 do_install() {
     cd samples/c

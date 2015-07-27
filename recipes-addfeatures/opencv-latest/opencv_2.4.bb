@@ -1,4 +1,4 @@
-DESCRIPTION = "Opencv : The Open Computer Vision Library"
+SUMMARY = "Opencv : The Open Computer Vision Library"
 HOMEPAGE = "http://opencv.willowgarage.com/wiki/"
 SECTION = "libs"
 
@@ -7,34 +7,39 @@ LIC_FILES_CHKSUM = "file://include/opencv2/opencv.hpp;endline=41;md5=6d690d8488a
 
 ARM_INSTRUCTION_SET = "arm"
 
-# AlexT: taken from meta-clanton-distro/recipes-support/opencv/opencv_2.4.3.bbappend
-DEPENDS = "python-numpy v4l-utils libav libtool swig swig-native python jpeg bzip2 zlib libpng tiff glib-2.0"
+DEPENDS = "python-numpy libtool swig swig-native python bzip2 zlib glib-2.0"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/project/opencvlibrary/opencv-unix/${PV}/opencv-${PV}.zip \
-           file://opencv-fix-pkgconfig-generation.patch \
-"
+SRCREV = "2c9547e3147779001811d01936aed38f560929fc"
+SRC_URI = "git://github.com/Itseez/opencv.git;branch=2.4"
 
-SRC_URI[md5sum] = "7f958389e71c77abdf5efe1da988b80c"
-SRC_URI[sha256sum] = "803010848154988e9cbda8b3fa857fcbb27382c2946ed729e1a7e40600bb4c71"
+PV = "2.4.11+git${SRCPV}"
 
-PR = "r1"
-
-S = "${WORKDIR}/opencv-${PV}"
+S = "${WORKDIR}/git"
 
 # Do an out-of-tree build
 OECMAKE_SOURCEPATH = "${S}"
 OECMAKE_BUILDPATH = "${WORKDIR}/build-${TARGET_ARCH}"
 
-# AlexT: taken from meta-clanton-distro/recipes-support/opencv/opencv_2.4.3.bbappend
 EXTRA_OECMAKE = "-DPYTHON_NUMPY_INCLUDE_DIR:PATH=${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/numpy/core/include \
                  -DBUILD_PYTHON_SUPPORT=ON \
-                 -DWITH_FFMPEG=ON \
                  -DWITH_GSTREAMER=OFF \
-                 -DWITH_V4L=ON \
+                 -DWITH_1394=OFF \
                  -DCMAKE_SKIP_RPATH=ON \
                  ${@bb.utils.contains("TARGET_CC_ARCH", "-msse3", "-DENABLE_SSE=1 -DENABLE_SSE2=1 -DENABLE_SSE3=1 -DENABLE_SSSE3=1", "", d)} \
+                 ${@base_conditional("libdir", "/usr/lib64", "-DLIB_SUFFIX=64", "", d)} \
+                 ${@base_conditional("libdir", "/usr/lib32", "-DLIB_SUFFIX=32", "", d)} \
 "
 
+PACKAGECONFIG ??= "eigen jpeg libav png tiff v4l \
+                   ${@bb.utils.contains("DISTRO_FEATURES", "x11", "gtk", "", d)}"
+PACKAGECONFIG[eigen] = "-DWITH_EIGEN=ON,-DWITH_EIGEN=OFF,libeigen,"
+PACKAGECONFIG[gtk] = "-DWITH_GTK=ON,-DWITH_GTK=OFF,gtk+,"
+PACKAGECONFIG[jpeg] = "-DWITH_JPEG=ON,-DWITH_JPEG=OFF,jpeg,"
+PACKAGECONFIG[libav] = "-DWITH_FFMPEG=ON,-DWITH_FFMPEG=OFF,libav,"
+PACKAGECONFIG[png] = "-DWITH_PNG=ON,-DWITH_PNG=OFF,libpng,"
+PACKAGECONFIG[tiff] = "-DWITH_TIFF=ON,-DWITH_TIFF=OFF,tiff,"
+PACKAGECONFIG[v4l] = "-DWITH_V4L=ON,-DWITH_V4L=OFF,v4l-utils,"
+PACKAGECONFIG[jasper] = "-DWITH_JASPER=ON,-DWITH_JASPER=OFF,jasper,"
 
 inherit distutils-base pkgconfig cmake
 
@@ -78,11 +83,17 @@ FILES_${PN}-doc = "${datadir}/OpenCV/doc"
 ALLOW_EMPTY_${PN} = "1"
 
 INSANE_SKIP_python-opencv = "True"
-DESCRIPTION_python-opencv = "Python bindings to opencv"
+SUMMARY_python-opencv = "Python bindings to opencv"
 FILES_python-opencv = "${PYTHON_SITEPACKAGES_DIR}/*"
 RDEPENDS_python-opencv = "python-core python-numpy"
 
 do_install_append() {
     cp ${S}/include/opencv/*.h ${D}${includedir}/opencv/
     sed -i '/blobtrack/d' ${D}${includedir}/opencv/cvaux.h
+
+    # Move Python files into correct library folder (for multilib build)
+    if [ "$libdir" != "/usr/lib" ]; then
+        mv ${D}/usr/lib/* ${D}/${libdir}/
+        rm -rf ${D}/usr/lib
+    fi
 }
