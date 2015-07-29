@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.php.net"
 SECTION = "console/network"
 
 LICENSE = "PHP-3.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=52dd90569008fee5bcdbb22d945b1108"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=464ca70af214d2407f6b7d4458158afd"
 
 BBCLASSEXTEND = "native"
 DEPENDS = "zlib bzip2 libxml2 virtual/libiconv php-native lemon-native \
@@ -27,10 +27,11 @@ SRC_URI_append_class-target += " \
             file://configure.patch \
             file://pthread-check-threads-m4.patch \
             file://70_mod_php5.conf \
+            file://php-fpm.service \
           "
 
-SRC_URI[md5sum] = "9dfc1d4d2b44fb7e2b4ee9651d032203"
-SRC_URI[sha256sum] = "f28a150d1cd8991bd1a41dce4fdff4e343d1dbe01a48b9b44bea74532ce0391a"
+SRC_URI[md5sum] = "383a4b35327809afd2822e1e5efc8ee1"
+SRC_URI[sha256sum] = "816afffdb03ff4c542bc172a2f77f9c69b817df82d60cce05c1b4f578c2c926e"
 
 S = "${WORKDIR}/php-${PV}"
 
@@ -56,6 +57,7 @@ EXTRA_OECONF = "--enable-mbstring \
                 --enable-wddx \
                 --enable-fpm \
                 --enable-zip \
+                --with-libdir=${baselib} \
                 --with-gettext=${STAGING_LIBDIR}/.. \
                 --with-zlib=${STAGING_LIBDIR}/.. \
                 --with-iconv=${STAGING_LIBDIR}/.. \
@@ -72,7 +74,7 @@ EXTRA_OECONF_class-native = " \
                 ${COMMON_EXTRA_OECONF} \
 "
 
-PACKAGECONFIG ??= "apache2 mysql sqlite3 imap soap \
+PACKAGECONFIG ??= "mysql sqlite3 imap apache2 soap \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'pam', '', d)}"
 PACKAGECONFIG_class-native = ""
 
@@ -99,6 +101,7 @@ PACKAGECONFIG[imap] = "--with-imap=${STAGING_DIR_HOST} \
 export PHP_NATIVE_DIR = "${STAGING_BINDIR_NATIVE}"
 export PHP_PEAR_PHP_BIN = "${STAGING_BINDIR_NATIVE}/php"
 CFLAGS += " -D_GNU_SOURCE -g -DPTYS_ARE_GETPT -DPTYS_ARE_SEARCHED -I${STAGING_INCDIR}/apache2"
+CFLAGS_append_aarch64 = " -O2"
 
 EXTRA_OEMAKE = "INSTALL_ROOT=${D}"
 
@@ -155,6 +158,16 @@ do_install_append_class-target() {
     sed -i 's:=/etc:=${sysconfdir}:g' ${B}/sapi/fpm/init.d.php-fpm
     sed -i 's:=/var:=${localstatedir}:g' ${B}/sapi/fpm/init.d.php-fpm
     install -m 0755 ${B}/sapi/fpm/init.d.php-fpm ${D}${sysconfdir}/init.d/php-fpm
+    install -m 0644 ${WORKDIR}/php-fpm-apache.conf ${D}/${sysconfdir}/apache2/conf.d/php-fpm.conf
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)};then
+        install -d ${D}${systemd_unitdir}/system
+        install -m 0644 ${WORKDIR}/php-fpm.service ${D}${systemd_unitdir}/system/
+        sed -i -e 's,@SYSCONFDIR@,${sysconfdir},g' \
+            -e 's,@LOCALSTATEDIR@,${localstatedir},g' \
+            ${D}${systemd_unitdir}/system/php-fpm.service
+    fi
+
     TMP=`dirname ${D}/${TMPDIR}`
     while test ${TMP} != ${D}; do
         rmdir ${TMP}
@@ -205,7 +218,7 @@ FILES_${PN}-doc += "${PHP_LIBDIR}/php/doc"
 FILES_${PN}-cli = "${bindir}/php"
 FILES_${PN}-phar = "${bindir}/phar*"
 FILES_${PN}-cgi = "${bindir}/php-cgi"
-FILES_${PN}-fpm = "${sbindir}/php-fpm ${sysconfdir}/php-fpm.conf ${datadir}/fpm ${sysconfdir}/init.d/php-fpm"
+FILES_${PN}-fpm = "${sbindir}/php-fpm ${sysconfdir}/php-fpm.conf ${datadir}/fpm ${sysconfdir}/init.d/php-fpm ${systemd_unitdir}/system/php-fpm.service"
 FILES_${PN}-fpm-apache2 = "${sysconfdir}/apache2/conf.d/php-fpm.conf"
 CONFFILES_${PN}-fpm = "${sysconfdir}/php-fpm.conf"
 CONFFILES_${PN}-fpm-apache2 = "${sysconfdir}/apache2/conf.d/php-fpm.conf"
@@ -234,3 +247,29 @@ RPROVIDES_${PN}-modphp = "${MODPHP_OLDPACKAGE}"
 RREPLACES_${PN}-modphp = "${MODPHP_OLDPACKAGE}"
 RCONFLICTS_${PN}-modphp = "${MODPHP_OLDPACKAGE}"
 
+do_install_append_class-native() {
+    create_wrapper ${D}${bindir}/php \
+        PHP_PEAR_SYSCONF_DIR=${sysconfdir}/
+}
+
+SSTATEPOSTINSTFUNCS_append_class-native = " php_sstate_postinst "
+
+php_sstate_postinst() {
+    if [ "${BB_CURRENTTASK}" = "populate_sysroot_setscene" ]
+    then
+        head -n1 ${sysconfdir}/pear.conf > ${sysconfdir}/pear.tmp.conf
+        for p in `tail -n1  ${sysconfdir}/pear.conf | sed -s 's/;/ /g'`; do
+            echo $p | awk -F: 'BEGIN {OFS = ":"; ORS = ";"}{if(NF==3){print $1, length($3)-2*match($3, /^"/), $3} else {print $0}}';
+        done >> ${sysconfdir}/pear.tmp.conf
+        mv -f ${sysconfdir}/pear.tmp.conf ${sysconfdir}/pear.conf
+    fi
+}
+
+# Fails to build with thumb-1 (qemuarm)
+# | {standard input}: Assembler messages:
+# | {standard input}:3719: Error: selected processor does not support Thumb mode `smull r0,r2,r9,r3'
+# | {standard input}:3720: Error: unshifted register required -- `sub r2,r2,r0,asr#31'
+# | {standard input}:3796: Error: selected processor does not support Thumb mode `smull r0,r2,r3,r3'
+# | {standard input}:3797: Error: unshifted register required -- `sub r2,r2,r0,asr#31'
+# | make: *** [ext/standard/math.lo] Error 1
+ARM_INSTRUCTION_SET = "arm"
