@@ -5,7 +5,7 @@ Postfix attempts to be fast, easy to administer, and secure. The outsidei \
 has a definite Sendmail-ish flavor, but the inside is completely different."
 
 HOMEPAGE= "http://www.postfix.org"
-SECTION = "console/network"
+SECTION = "mail"
 DEPENDS = "virtual/db libpcre openssl postfix-native \
     ${@base_contains('DISTRO_FEATURES', 'ldap', 'openldap', '', d)} \
     ${@base_contains('DISTRO_FEATURES', 'sasl', 'cyrus-sasl', '', d)} \
@@ -124,12 +124,11 @@ do_install_prepend_virtclass-native() {
 }
 
 SYSTEMD_SERVICE_${PN} = "postfix.service"
-SYSTEMD_AUTO_ENABLE = "disable"
 
 do_install () {
     sh ./postfix-install 'install_root=${D}' \
         'config_directory=${sysconfdir}/postfix' \
-        'daemon_directory=${exec_prefix}/libexec/postfix' \
+        'daemon_directory=${libexecdir}' \
         'command_directory=${sbindir}' \
         'queue_directory=${localstatedir}/spool/postfix' \
         'sendmail_path=${sbindir}/sendmail.postfix' \
@@ -141,20 +140,24 @@ do_install () {
         -non-interactive
     rm -rf ${D}${localstatedir}/spool/postfix
     mv ${D}${sysconfdir}/postfix/main.cf ${D}${sysconfdir}/postfix/sample-main.cf
+    install -m 755 ${S}/bin/smtp-sink ${D}/${sbindir}/
     install -d ${D}${sysconfdir}/init.d
     install -m 644 ${WORKDIR}/main.cf_2.0 ${D}${sysconfdir}/postfix/main.cf
+    sed -i 's#@LIBEXECDIR@#${libexecdir}#' ${D}${sysconfdir}/postfix/main.cf
+
     install -m 755 ${WORKDIR}/postfix ${D}${sysconfdir}/init.d/postfix
     install -m 644 ${WORKDIR}/internal_recipient ${D}${sysconfdir}/postfix/internal_recipient
 
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${WORKDIR}/postfix.service ${D}${systemd_unitdir}/system
-    sed -i 's,/usr/sbin/,${sbindir}/,g' ${D}${systemd_unitdir}/system/postfix.service
+    sed -i -e 's#@LIBEXECDIR@#${libexecdir}#g' ${D}${systemd_unitdir}/system/postfix.service
+    sed -i -e 's#@LOCALSTATEDIR@#${localstatedir}#g' ${D}${systemd_unitdir}/system/postfix.service
+    sed -i -e 's#@SBINDIR@#${sbindir}#g' ${D}${systemd_unitdir}/system/postfix.service
 
-    install -m 0755 ${WORKDIR}/aliasesdb ${D}${exec_prefix}/libexec/postfix/
+    install -m 0755 ${WORKDIR}/aliasesdb ${D}${libexecdir}
 
     install -m 770 -d ${D}${localstatedir}/spool/postfix
     chown postfix:postfix ${D}${localstatedir}/spool/postfix
-    chown postfix:postfix ${D}${localstatedir}/lib/postfix
 
     install -m 2755 -d ${D}${localstatedir}/spool/mail
     chown postfix:nogroup ${D}${localstatedir}/spool/mail
@@ -229,10 +232,15 @@ pkg_postinst_${PN} () {
         newaliases -C $D/etc/postfix/main.cf -oA$D/etc/aliases
         touch $D/etc/postfix/virtual_alias
         postmap -c $D/etc/postfix $D/etc/postfix/virtual_alias
+
+        if ${@'true' if 'linuxstdbase' in d.getVar('DISTROOVERRIDES', False) else 'false'}; then
+            # /usr/lib/sendmial is required by LSB core test
+            [ ! -L $D/usr/lib/sendmail ] && ln -sf ${sbindir}/sendmail $D/usr/lib/
+        fi
     fi
 }
 
 # Exclude .debug directories from the main package
 FILES_${PN} = "${sysconfdir} ${localstatedir} ${bindir}/* ${sbindir}/* \
-               ${exec_prefix}/libexec/postfix/* ${systemd_unitdir}/*"
-FILES_${PN}-dbg += "${exec_prefix}/libexec/postfix/.debug"
+               ${libexecdir}/* ${systemd_unitdir}/*"
+FILES_${PN}-dbg += "${libexecdir}/.debug"
