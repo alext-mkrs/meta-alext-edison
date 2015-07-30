@@ -1,6 +1,6 @@
 SUMMARY = "Very Secure FTP server"
 HOMEPAGE = "https://security.appspot.com/vsftpd.html"
-SECTION = "network"
+SECTION = "net"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271"
 
@@ -17,6 +17,7 @@ SRC_URI = "https://security.appspot.com/downloads/vsftpd-${PV}.tar.gz \
            file://change-secure_chroot_dir.patch \
            file://volatiles.99_vsftpd \
            file://vsftpd.service \
+           file://vsftpd-2.1.0-filter.patch \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6067ad950b28336613aed9dd47b1271 \
