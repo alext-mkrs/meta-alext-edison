@@ -1,0 +1,26 @@
+From ccf5901202b88dede70d66dc537842d81fad24ae Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 18:10:43 +0200
+Subject: [PATCH] Added modules_install target for Yocto
+
+---
+ Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index a74f0da..62e259b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -47,6 +47,9 @@ install:
+ 	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules_install
+ 	depmod -a  $(KERNELRELEASE)
+ 
++modules_install:
++		$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules_install
++
+ install-utils: utils/v4l2loopback-ctl
+ 	$(INSTALL_DIR) "$(DESTDIR)$(BINDIR)"
+ 	$(INSTALL_PROGRAM) $< "$(DESTDIR)$(BINDIR)"
+-- 
+1.7.9.5
+

@@ -1,0 +1,29 @@
+From c0750e63d52f7b832b7f92e992a86f0197f63a36 Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 18:45:45 +0200
+Subject: [PATCH] Corrected path to help2man
+
+---
+ Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 62e259b..c4b87b5 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,5 +1,6 @@
+ KERNELRELEASE	?= $(KERNEL_VERSION)
+ KERNEL_DIR	?= $(KERNEL_SRC)
++NATIVE_BINDIR   ?= $(YOCTO_NATIVE_BINDIR)
+ PWD		:= $(shell pwd)
+ obj-m		:= v4l2loopback.o
+ 
+@@ -73,4 +74,4 @@ modprobe: v4l2loopback.ko
+ 	sudo insmod ./v4l2loopback.ko $(MODULE_OPTIONS)
+ 
+ man/v4l2loopback-ctl.1: utils/v4l2loopback-ctl
+-	help2man -N --name "control v4l2 loopback devices" $^ > $@
++	$(NATIVE_BINDIR)/help2man -N --name "control v4l2 loopback devices" $^ > $@
+-- 
+1.7.9.5
+

@@ -1,0 +1,24 @@
+From f53041ed4803c53acb467672430e3b68865dddf5 Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 17:55:46 +0200
+Subject: [PATCH] Corrected hardcoded kernel src path
+
+---
+ Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 22bef42..a74f0da 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,5 +1,5 @@
+-KERNELRELEASE	?= `uname -r`
+-KERNEL_DIR	?= /lib/modules/$(KERNELRELEASE)/build
++KERNELRELEASE	?= $(KERNEL_VERSION)
++KERNEL_DIR	?= $(KERNEL_SRC)
+ PWD		:= $(shell pwd)
+ obj-m		:= v4l2loopback.o
+ 
+-- 
+1.7.9.5
+
