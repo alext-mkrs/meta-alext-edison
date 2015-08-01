@@ -1,0 +1,25 @@
+From b0fd9a0a2a36227df87356a2ce152b03a7be87e2 Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 22:25:48 +0200
+Subject: [PATCH] Fixed Python include
+
+---
+ python/zbarmodule.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/python/zbarmodule.h b/python/zbarmodule.h
+index b6b660f..b0f82e4 100644
+--- a/python/zbarmodule.h
++++ b/python/zbarmodule.h
+@@ -21,7 +21,7 @@
+  *  http://sourceforge.net/projects/zbar
+  *------------------------------------------------------------------------*/
+ 
+-#include <Python.h>
++#include <python2.7/Python.h>
+ #include <stddef.h>
+ #include <zbar.h>
+ 
+-- 
+1.7.9.5
+

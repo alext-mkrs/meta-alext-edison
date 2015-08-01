@@ -1,0 +1,31 @@
+From 6b07075bac199438fe9bc99a22e67733e3be0c8a Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 21:17:11 +0200
+Subject: [PATCH] Fixed automake pattern rule warning
+
+---
+ gtk/Makefile.am.inc |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/gtk/Makefile.am.inc b/gtk/Makefile.am.inc
+index 406fd86..8c868e5 100644
+--- a/gtk/Makefile.am.inc
++++ b/gtk/Makefile.am.inc
+@@ -10,10 +10,12 @@ BUILT_SOURCES += gtk/zbarmarshal.c gtk/zbarmarshal.h
+ CLEANFILES += gtk/zbarmarshal.c gtk/zbarmarshal.h
+ EXTRA_DIST += gtk/zbarmarshal.list
+ 
+-%.h: %.list
++SUFFIXES = .list .h
++
++.list.h:
+ 	$(GLIB_GENMARSHAL) --g-fatal-warnings --prefix=zbar_marshal \
+ 	    --header $^ > $@
+ 
+-%.c: %.list
++.list.c:
+ 	$(GLIB_GENMARSHAL) --g-fatal-warnings --prefix=zbar_marshal \
+ 	    --body $^ > $@
+-- 
+1.7.9.5
+

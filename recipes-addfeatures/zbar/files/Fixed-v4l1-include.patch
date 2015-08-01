@@ -1,0 +1,25 @@
+From 69f8aab9f17cdfb2e3c7c6cb0f1335aabdca1a4c Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 22:15:52 +0200
+Subject: [PATCH] Fixed v4l1 include
+
+---
+ zbar/video/v4l1.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/zbar/video/v4l1.c b/zbar/video/v4l1.c
+index 89b1da2..9d8653d 100644
+--- a/zbar/video/v4l1.c
++++ b/zbar/video/v4l1.c
+@@ -41,7 +41,7 @@
+ #ifdef HAVE_SYS_MMAN_H
+ # include <sys/mman.h>
+ #endif
+-#include <linux/videodev.h>
++#include <libv4l1-videodev.h>
+ 
+ #include "video.h"
+ #include "image.h"
+-- 
+1.7.9.5
+

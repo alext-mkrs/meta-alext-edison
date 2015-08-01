@@ -1,0 +1,32 @@
+From 0f16841740f7dc16975d123a477a3bd7d5c5d7fd Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 20:50:29 +0200
+Subject: [PATCH] Fixed AM_PROG_AR warning
+
+---
+ configure.ac |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 56d3dd0..3be339f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -4,12 +4,15 @@ AC_INIT([zbar], [0.10], [spadix@users.sourceforge.net])
+ AC_CONFIG_AUX_DIR(config)
+ AC_CONFIG_MACRO_DIR(config)
+ AM_INIT_AUTOMAKE([1.10 -Wall -Werror foreign subdir-objects std-options dist-bzip2])
++AM_PROG_AR
+ AC_CONFIG_HEADERS([include/config.h])
+ AC_CONFIG_SRCDIR(zbar/scanner.c)
+ LT_PREREQ([2.2])
+ LT_INIT([dlopen win32-dll])
+ LT_LANG([Windows Resource])
+ 
++
++
+ dnl update these just before each release (along w/pacakge version above)
+ dnl   LIB_VERSION update instructions copied from libtool docs:
+ dnl   library version follows the form current:revision:age
+-- 
+1.7.9.5
+

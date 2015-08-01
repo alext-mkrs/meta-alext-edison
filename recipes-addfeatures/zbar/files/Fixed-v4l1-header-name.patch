@@ -1,0 +1,25 @@
+From 272981651ac9b834b1d7e174bc38c0fd0cd698b6 Mon Sep 17 00:00:00 2001
+From: Alex T <alext.mkrs@gmail.com>
+Date: Sat, 1 Aug 2015 21:47:52 +0200
+Subject: [PATCH] Fixed v4l1 header name
+
+---
+ configure.ac |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 66ac529..65eccb3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -150,7 +150,7 @@ AC_ARG_ENABLE([video],
+ with_video="no"
+ AS_IF([test "x$enable_video" != "xno"],
+   [AS_IF([test "x$win32" = "xno"],
+-    [AC_CHECK_HEADERS([linux/videodev.h], [with_video="v4l1"],
++    [AC_CHECK_HEADERS([libv4l1-videodev.h], [with_video="v4l1"],
+       [AC_MSG_FAILURE([test for video support failed!
+ rebuild your kernel to include video4linux support or
+ configure --disable-video to skip building video support.])])
+-- 
+1.7.9.5
+
