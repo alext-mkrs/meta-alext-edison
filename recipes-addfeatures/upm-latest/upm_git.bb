@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=d1cc191275d6a8c5ce039c75b2b3dc29"
 DEPENDS = "nodejs swig-native mraa git-native"
 
 SRC_URI = "git://github.com/intel-iot-devkit/upm.git;protocol=https \
+           file://specify_python_version.diff \
 "
 SRCREV = "${AUTOREV}"
 
