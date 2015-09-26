@@ -2,14 +2,14 @@ DESCRIPTION = "nodeJS Evented I/O for V8 JavaScript"
 HOMEPAGE = "http://nodejs.org"
 # tools/wrk is under Apache-2.0
 LICENSE = "MIT & BSD & Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=e804bf1e856481415099460bc54d9316"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=14115ff11211df04b031ec7d40b6d31b"
 
 DEPENDS = "openssl"
 DEPENDS_class-target = "nodejs-native"
 
 PR = "r1"
 
-SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.10;tag=v0.10.40"
+SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.12;tag=v0.12.7"
 
 S = "${WORKDIR}/git"
 
@@ -78,7 +78,7 @@ RDEPENDS_${PN} = "curl"
 RDEPENDS_${PN}_class-native = ""
 
 PACKAGES += "${PN}-npm"
-FILES_${PN}-npm = "${libdir}/node_modules ${bindir}/npm"
+FILES_${PN}-npm = "${libdir}/node_modules ${bindir}/npm ${datadir}/systemtap/tapset/node.stp"
 RDEPENDS_${PN}-npm = "python-shell python-datetime python-subprocess python-crypt python-textutils \
                       python-netclient python-ctypes python-misc python-compiler python-multiprocessing"
 
