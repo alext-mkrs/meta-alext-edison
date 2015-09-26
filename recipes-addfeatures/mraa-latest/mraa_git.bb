@@ -8,10 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e8db6501ed294e65418a933925d12058"
 # git is required to get a good version from git describe
 DEPENDS = "nodejs swig-native"
 
-SRC_URI = "git://github.com/intel-iot-devkit/mraa.git;protocol=https"
+SRC_URI = "git://github.com/intel-iot-devkit/mraa.git;protocol=https \
+"
+
 SRCREV = "${AUTOREV}"
 
-PV = "0.7.3+git${SRCPV}"
+PV = "0.8.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
