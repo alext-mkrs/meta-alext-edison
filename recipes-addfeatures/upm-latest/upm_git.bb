@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/intel-iot-devkit/upm.git;protocol=https \
 "
 SRCREV = "${AUTOREV}"
 
-PV = "0.3.1+git${SRCPV}"
+PV = "0.4.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
