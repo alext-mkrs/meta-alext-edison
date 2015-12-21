@@ -1,0 +1,31 @@
+--- a/cpp/build/Makefile	2015-12-11 12:14:51.000000000 +0100
++++ b/cpp/build/Makefile	2015-12-13 22:32:51.353429541 +0100
+@@ -128,7 +132,7 @@
+ 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
+ 			$(OBJDIR)/vers.o
+ 	@echo "Linking Static Library"
+-	@$(AR) $@ $+
++	@$(AR) rcv $@ $+
+ 	@$(RANLIB) $@
+ 
+ $(LIBDIR)/$(SHARED_LIB_NAME):	$(patsubst %.cpp,$(OBJDIR)/%.o,$(tinyxml)) \
+@@ -140,7 +139,7 @@
+ 			$(patsubst %.cpp,$(OBJDIR)/%.o,$(indep)) \
+ 			$(OBJDIR)/vers.o
+ 	@echo "Linking Shared Library"
+-	@$(LD) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
++	@$(CC) $(LDFLAGS) $(TARCH) -o $@ $+ $(LIBS)
+ 	@ln -sf $(SHARED_LIB_NAME) $(LIBDIR)/$(SHARED_LIB_UNVERSIONED)
+ 
+ $(top_builddir)/libopenzwave.pc: $(top_srcdir)/cpp/build/libopenzwave.pc.in $(PKGCONFIG)
+@@ -149,8 +149,8 @@
+ 		-e 's|[@]prefix@|$(PREFIX)|g' \
+ 		-e 's|[@]exec_prefix@|$(PREFIX)/bin|g' \
+ 		-e 's|[@]libdir@|$(instlibdir)|g' \
+-		-e 's|[@]includedir@|$(PREFIX)/include/openzwave/|g' \
+-                -e 's|[@]sysconfdir@|$(PREFIX)/etc/openzwave/|g' \
++		-e 's|[@]includedir@|$(includedir)|g' \
++                -e 's|[@]sysconfdir@|$(sysconfdir)|g' \
+                 -e 's|[@]gitversion@|$(GITVERSION)|g' \
+                 -e 's|[@]docdir@|$(docdir)/|g' \
+ 		-e 's|[@]VERSION@|$(VERSION)|g' \

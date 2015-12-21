@@ -1,0 +1,49 @@
+--- a/cpp/build/support.mk	2015-12-11 12:14:51.000000000 +0100
++++ b/cpp/build/support.mk	2015-12-13 22:32:45.997429681 +0100
+@@ -16,7 +16,7 @@
+ #dot is required for doxygen (part of Graphviz)
+ DOT := $(shell which dot)
+ #the machine type we are building on (i686 or x86_64)
+-MACHINE := $(shell uname -m)
++MACHINE := i686
+ #the location of xmllink for checking our config files
+ XMLLINT := $(shell which xmllint)
+ #temp directory to build our tarfile for make dist target
+@@ -50,18 +50,18 @@
+ CXX    := $(CROSS_COMPILE)c++
+ LD     := $(CROSS_COMPILE)c++
+ else
+-CC     := $(CROSS_COMPILE)gcc
+-CXX    := $(CROSS_COMPILE)g++
+-LD     := $(CROSS_COMPILE)g++
++CC     ?= $(CROSS_COMPILE)gcc
++CXX    ?= $(CROSS_COMPILE)g++
++LD     ?= $(CROSS_COMPILE)g++
+ endif
+ ifeq ($(UNAME),Darwin)
+ AR     := libtool -static -o 
+ RANLIB := ranlib
+ else
+-AR     := $(CROSS_COMPILE)ar rc
+-RANLIB := $(CROSS_COMPILE)ranlib
++AR     := $(AR)
++RANLIB ?= $(CROSS_COMPILE)ranlib
+ endif
+-SED    := sed
++SED    ?= sed
+ 
+ 
+ #determine if we are release or debug Build and set appropriate flags
+@@ -91,11 +91,7 @@
+ endif
+ 
+ #pkg-config doesn't exist, lets try to guess best place to put the pc file
+-ifeq ($(PKGCONFIG),)
+-pkgconfigdir ?= $(shell if [ -d "/usr/lib64/pkgconfig" ]; then echo "/usr/lib64/pkgconfig"; else echo "/usr/lib/pkgconfig"; fi)
+-else
+-pkgconfigdir ?= $(shell pkg-config --variable pc_path pkg-config | awk '{split($$0,a,":"); print a[1]}')
+-endif
++pkgconfigdir ?= /usr/lib/pkgconfig
+ 
+ sysconfdir ?= $(PREFIX)/etc/openzwave/
+ includedir ?= $(PREFIX)/include/openzwave/
