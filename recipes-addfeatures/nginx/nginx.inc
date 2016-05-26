@@ -6,7 +6,7 @@ concurrency, performance and low memory usage."
 
 HOMEPAGE = "http://nginx.org/"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=3845852aedfa8d6d7765f55d06cc3ebd"
+
 SECTION = "net"
 
 DEPENDS = "libpcre gzip openssl"
@@ -20,15 +20,16 @@ SRC_URI = " \
 	file://nginx.service \
 "
 
-SRC_URI[md5sum] = "390586a36c8a510849527df106d857c0"
-SRC_URI[sha256sum] = "794bd217affdfce1c6263d9199c3961f387a2df9d57dcb42876faaf41c1748d5"
-
 inherit update-rc.d useradd
 
 CFLAGS_append = " -fPIE -pie"
 CXXFLAGS_append = " -fPIE -pie"
 
+NGINX_WWWDIR ?= "${localstatedir}/www/localhost"
+NGINX_USER   ?= "www"
+
 EXTRA_OECONF = ""
+DISABLE_STATIC = ""
 
 do_configure () {
 	if [ "${SITEINFO_BITS}" = "64" ]; then
@@ -65,16 +66,16 @@ do_configure () {
 do_install () {
 	oe_runmake 'DESTDIR=${D}' install
 	rm -fr ${D}${localstatedir}/run ${D}/run
-	if ${@base_contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/tmpfiles.d
 		echo "d /run/${BPN} - - - -" \
 		     > ${D}${sysconfdir}/tmpfiles.d/${BPN}.conf
 	fi
 	install -d ${D}${sysconfdir}/${BPN}
 	ln -snf ${localstatedir}/run/${BPN} ${D}${sysconfdir}/${BPN}/run
-	install -d ${D}${localstatedir}/www/localhost
-	mv ${D}/usr/html ${D}${localstatedir}/www/localhost/
-	chown www:www-data -R ${D}${localstatedir}
+	install -d ${D}${NGINX_WWWDIR}
+	mv ${D}/usr/html ${D}${NGINX_WWWDIR}/
+	chown ${NGINX_USER}:www-data -R ${D}${NGINX_WWWDIR}
 
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/nginx.init ${D}${sysconfdir}/init.d/nginx
@@ -131,6 +132,6 @@ INITSCRIPT_PARAMS = "defaults 92 20"
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = " \
     --system --no-create-home \
-    --home ${localstatedir}/www/localhost \
+    --home ${NGINX_WWWDIR} \
     --groups www-data \
-    --user-group www"
+    --user-group ${NGINX_USER}"
