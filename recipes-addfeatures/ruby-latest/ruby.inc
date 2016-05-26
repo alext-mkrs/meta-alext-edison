@@ -9,22 +9,19 @@ SECTION = "devel/ruby"
 LICENSE = "Ruby | BSD | GPLv2"
 LIC_FILES_CHKSUM = "\
     file://COPYING;md5=837b32593517ae48b9c3b5c87a5d288c \
-    file://BSDL;md5=19aaf65c88a40b508d17ae4be539c4b5 \
-    file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-    file://LEGAL;md5=3ce1fae39fe573b818c0af162bce6579 \
+    file://BSDL;md5=19aaf65c88a40b508d17ae4be539c4b5\
+    file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263\
+    file://LEGAL;md5=c440adb575ba4e6e2344c2630b6a5584\
 "
 
 DEPENDS = "ruby-native zlib openssl tcl libyaml db gdbm readline"
-DEPENDS_class-native = ""
+DEPENDS_class-native = "openssl-native libyaml-native"
 
-INC_PR = "r1"
-
-SRC_URI = "http://ftp.ruby-lang.org/pub/ruby/ruby-${PV}.tar.gz \
-	   file://extmk_run.patch \
+SHRT_VER = "${@oe.utils.trim_version("${PV}", 2)}"
+SRC_URI = "http://cache.ruby-lang.org/pub/ruby/${SHRT_VER}/ruby-${PV}.tar.gz \
            file://extmk.patch \
-"
-
-S = "${WORKDIR}/ruby-${PV}"
+           file://0002-Obey-LDFLAGS-for-the-link-of-libruby.patch \
+           "
 
 inherit autotools
 
