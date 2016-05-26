@@ -8,15 +8,17 @@ PR = "r0"
 DEPENDS = "systemd"
 
 SRC_URI = "http://old.openzwave.com/snapshots/openzwave-${PV}.tar.gz \
-           file://main-makefile.diff \
            file://main-support-mk.diff \
-           file://minozw-makefile.diff \
 "
 
-SRC_URI[md5sum] = "43b48ac2b0a5f69161c19637267851cc"
-SRC_URI[sha256sum] = "02de82db72ca6646b401e40c9c8d05fac109e173847576b4e4d700e44623d136"
+SRC_URI[md5sum] = "984d2202d2dbc010fb19e09b236408b9"
+SRC_URI[sha256sum] = "dc141ce510604381519ca8c5c8dfb70717bfab6b12bada0411625d277449641e"
 
 inherit autotools-brokensep pkgconfig systemd
+
+do_compile_prepend() {
+  export BITBAKE_ENV=1
+}
 
 do_install() {
   oe_runmake \
