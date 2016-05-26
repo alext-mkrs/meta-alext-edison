@@ -7,11 +7,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=14115ff11211df04b031ec7d40b6d31b"
 DEPENDS = "openssl"
 DEPENDS_class-target = "nodejs-native"
 
-PR = "r1"
+PR = "r0"
 
-SRC_URI = "git://github.com/joyent/node.git;protocol=https;branch=v0.12;tag=v0.12.7"
+SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz"
 
-S = "${WORKDIR}/git"
+SRC_URI[md5sum] = "27f1a2cf00af32cbfe9401ca4b1a805f"
+SRC_URI[sha256sum] = "ed57a1917fb089726b31735e138fb41d897b3c834cfc7c895390b2d273623f1a"
+
+S = "${WORKDIR}/node-v${PV}"
 
 # v8 errors out if you have set CCACHE
 CCACHE = ""
