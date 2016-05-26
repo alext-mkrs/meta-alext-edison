@@ -12,5 +12,9 @@ specific instructions.
 
 This is work-in-progress, so take the commit messages into account before reusing recipes.
 
+Some of the recipes are taken as-is from other layers (after they've tested to compile for Edison),
+some are modified to build for Edison and some are written from scratch. Commit messages indicate,
+which commit is what.
+
 Feel free to ask questions through GitHub's bugtracker for the repo or
 in Intel Edison Community at https://communities.intel.com/community/makers/edison/forums
