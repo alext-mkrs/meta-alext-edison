@@ -5,8 +5,6 @@ BUGTRACKER = "http://redmine.lighttpd.net/projects/lighttpd/issues"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e4dac5c6ab169aa212feb5028853a579"
 
-PR = "r1"
-
 SECTION = "net"
 DEPENDS = "zlib libpcre"
 RDEPENDS_${PN} += " \
@@ -17,8 +15,7 @@ RDEPENDS_${PN} += " \
                lighttpd-module-staticfile \
 "
 
-
-SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.bz2 \
+SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.tar.xz \
         file://index.html.lighttpd \
         file://lighttpd.conf \
         file://lighttpd \
@@ -26,8 +23,8 @@ SRC_URI = "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${PV}.t
         file://pkgconfig.patch \
         "
 
-SRC_URI[md5sum] = "f7a88130ee9984b421ad8aa80629750a"
-SRC_URI[sha256sum] = "4a71c1f6d8af41ed894b507720c4c17184dc320590013881d5170ca7f15c5bf7"
+SRC_URI[md5sum] = "63c7563be1c7a7a9819a51f07f1af8b2"
+SRC_URI[sha256sum] = "7eb9a1853c3d6dd5851682b0733a729ba4158d6bdff80974d5ef5f1f6887365b"
 
 PACKAGECONFIG ??= "openssl"
 PACKAGECONFIG[openssl] = "--with-openssl, --without-openssl, openssl"
