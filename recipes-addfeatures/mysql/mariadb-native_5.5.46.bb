@@ -8,6 +8,10 @@ RDEPENDS_${PN} = ""
 PACKAGES = ""
 EXTRA_OEMAKE = ""
 
+# added by AlexT - needed in combination with newer CMake in rel 3.0
+OECMAKE_C_COMPILER = "`which gcc`"
+OECMAKE_CXX_COMPILER = "`which g++`"
+
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
 
