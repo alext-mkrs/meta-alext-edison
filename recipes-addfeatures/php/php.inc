@@ -3,7 +3,6 @@ HOMEPAGE = "http://www.php.net"
 SECTION = "console/network"
 
 LICENSE = "PHP-3.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=464ca70af214d2407f6b7d4458158afd"
 
 BBCLASSEXTEND = "native"
 DEPENDS = "zlib bzip2 libxml2 virtual/libiconv php-native lemon-native \
@@ -61,7 +60,6 @@ EXTRA_OECONF = "--enable-mbstring \
                 --with-mcrypt=${STAGING_DIR_TARGET}${exec_prefix} \
                 --with-bz2=${STAGING_DIR_TARGET}${exec_prefix} \
                 --with-config-file-path=${sysconfdir}/php/apache2-php5 \
-                --with-curl=${STAGING_DIR_TARGET}${exec_prefix} \
                 ${@base_conditional('SITEINFO_ENDIANNESS', 'le', 'ac_cv_c_bigendian_php=no', 'ac_cv_c_bigendian_php=yes', d)} \
                 ${@bb.utils.contains('PACKAGECONFIG', 'pam', '', 'ac_cv_lib_pam_pam_start=no', d)} \
                 ${COMMON_EXTRA_OECONF} \
@@ -69,7 +67,7 @@ EXTRA_OECONF = "--enable-mbstring \
 EXTRA_OECONF_class-native = " \
                 --with-zlib=${STAGING_LIBDIR_NATIVE}/.. \
                 --without-iconv \
-		--with-curl=${STAGING_LIBDIR_NATIVE}/.. \
+                --with-curl=${STAGING_LIBDIR_NATIVE}/.. \
                 ${COMMON_EXTRA_OECONF} \
 "
 
