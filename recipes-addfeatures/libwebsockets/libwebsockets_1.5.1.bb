@@ -7,16 +7,14 @@ HOMEPAGE = "http://libwebsockets.org"
 LICENSE = "LGPL-2.1"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=041a1dec49ec8a22e7f101350fd19550"
 
-SRC_URI = "http://git.libwebsockets.org/cgi-bin/cgit/${PN}/snapshot/${PN}-${PV}-chrome43-firefox-36.tar.gz \
-           file://remove_cmake_targets.patch \
+SRC_URI = "https://github.com/warmcat/libwebsockets/archive/v${PV}.tar.gz \
 "
 
-SRC_URI[md5sum] = "0452c278a5cd4349135df2a693f35c28"
-SRC_URI[sha256sum] = "e11492477e582ef0b1a6ea2f18d81a9619b449170a3a5c43f32a9468461a9798"
-
-S = "${WORKDIR}/${PN}-${PV}-chrome43-firefox-36"
+SRC_URI[md5sum] = "c66a7437e4d05f1f073630837a2142e9"
+SRC_URI[sha256sum] = "a108177ee1d2a3d65dc1b0ae7a6b8801e1302466d8e1bca4952f34418339300d"
 
 DEPENDS += "openssl"
+RDEPENDS_${PN} += "zlib"
 
 inherit cmake
 
