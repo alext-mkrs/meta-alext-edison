@@ -7,10 +7,10 @@ has a definite Sendmail-ish flavor, but the inside is completely different."
 HOMEPAGE= "http://www.postfix.org"
 SECTION = "mail"
 DEPENDS = "virtual/db libpcre openssl postfix-native \
-    ${@base_contains('DISTRO_FEATURES', 'ldap', 'openldap', '', d)} \
-    ${@base_contains('DISTRO_FEATURES', 'sasl', 'cyrus-sasl', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ldap', 'openldap', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'sasl', 'cyrus-sasl', '', d)} \
 "
-DEPENDS_virtclass-native = "virtual/db-native openssl-native libpcre-native"
+DEPENDS_class-native = "virtual/db-native openssl-native libpcre-native"
 
 LICENSE = "IPL-1.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=64375f37431336ea1b1b3005fe3fa354"
@@ -23,9 +23,12 @@ SRC_URI = "ftp://ftp.porcupine.org/mirrors/postfix-release/official/postfix-${PV
     file://internal_recipient \
     file://postfix.service \
     file://aliasesdb \
+    file://check_hostname.sh \
 "
 
 S = "${WORKDIR}/postfix-${PV}"
+
+CLEANBROKEN = "1"
 
 BBCLASSEXTEND = "native"
 
@@ -36,9 +39,9 @@ INITSCRIPT_PARAMS = "start 58 3 4 5 . stop 13 0 1 6 ."
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM_${PN} = \
 "-d /var/spool/postfix -r -g postfix --shell /bin/false postfix; \
- -d /var/spool/vmail -r -u 5000 -g vmail --shell /bin/false vmail \
+ -d /var/spool/vmail -r -g vmail --shell /bin/false vmail \
 "
-GROUPADD_PARAM_${PN} = "--system postfix;--system postdrop;-g 5000 --system vmail"
+GROUPADD_PARAM_${PN} = "--system postfix;--system postdrop;--system vmail"
 
 export SYSLIBS = "${LDFLAGS}"
 
@@ -49,22 +52,22 @@ export SYSLIBS = "${LDFLAGS}"
 
 # ldap support
 export CCARGS-ldap  = "\
-    ${@base_contains('DISTRO_FEATURES', 'ldap', '-DHAS_LDAP', '', d)}"
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ldap', '-DHAS_LDAP', '', d)}"
 export AUXLIBS-ldap = "\
-    ${@base_contains('DISTRO_FEATURES', 'ldap', '-lldap -llber', '', d)}"
+    ${@bb.utils.contains('DISTRO_FEATURES', 'ldap', '-lldap -llber', '', d)}"
 
 # no native openldap
-export CCARGS-ldap_virtclass-native = ""
-export AUXLIBS-ldap_virtclass-native = ""
+export CCARGS-ldap_class-native = ""
+export AUXLIBS-ldap_class-native = ""
 
 # SASL support -DUSE_LDAP_SASL -DUSE_SASL_AUTH
 # current openldap didn't enable SASL
 export CCARGS-sasl  = "\
-    ${@base_contains('DISTRO_FEATURES', 'sasl', '-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I=/usr/include/sasl', '', d)}"
+    ${@bb.utils.contains('DISTRO_FEATURES', 'sasl', '-DUSE_SASL_AUTH -DUSE_CYRUS_SASL -I=/usr/include/sasl', '', d)}"
 export AUXLIBS-sasl = "\
-    ${@base_contains('DISTRO_FEATURES', 'sasl', '-lsasl2', '', d)}"
-export CCARGS-sasl_virtclass-native = ""
-export AUXLIBS-sasl_virtclass-native = ""
+    ${@bb.utils.contains('DISTRO_FEATURES', 'sasl', '-lsasl2', '', d)}"
+export CCARGS-sasl_class-native = ""
+export AUXLIBS-sasl_class-native = ""
 
 # PCRE, TLS support default
 export CCARGS  = "${CFLAGS} -DHAS_PCRE -DUSE_TLS ${CCARGS-ldap} ${CCARGS-sasl}"
@@ -119,7 +122,7 @@ do_compile () {
     oe_runmake
 }
 
-do_install_prepend_virtclass-native() {
+do_install_prepend_class-native() {
     export POSTCONF="bin/postconf"
 }
 
@@ -144,6 +147,8 @@ do_install () {
     install -d ${D}${sysconfdir}/init.d
     install -m 644 ${WORKDIR}/main.cf_2.0 ${D}${sysconfdir}/postfix/main.cf
     sed -i 's#@LIBEXECDIR@#${libexecdir}#' ${D}${sysconfdir}/postfix/main.cf
+
+    install -m 755 ${WORKDIR}/check_hostname.sh ${D}${sbindir}/
 
     install -m 755 ${WORKDIR}/postfix ${D}${sysconfdir}/init.d/postfix
     install -m 644 ${WORKDIR}/internal_recipient ${D}${sysconfdir}/postfix/internal_recipient
@@ -218,6 +223,11 @@ ALTERNATIVE_${PN} = "sendmail"
 ALTERNATIVE_TARGET[sendmail] = "${sbindir}/sendmail.postfix"
 ALTERNATIVE_LINK_NAME[sendmail] = "${sbindir}/sendmail"
 ALTERNATIVE_PRIORITY = "120"
+
+ALTERNATIVE_${PN}-doc += "mailq.1 newaliases.1 sendmail.1"
+ALTERNATIVE_LINK_NAME[mailq.1] = "${mandir}/man1/mailq.1"
+ALTERNATIVE_LINK_NAME[newaliases.1] = "${mandir}/man1/newaliases.1"
+ALTERNATIVE_LINK_NAME[sendmail.1] = "${mandir}/man1/sendmail.1"
 
 pkg_postinst_${PN} () {
     if [ "x$D" = "x" ]; then
