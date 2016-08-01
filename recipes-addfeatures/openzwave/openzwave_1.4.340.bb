@@ -11,8 +11,8 @@ SRC_URI = "http://old.openzwave.com/snapshots/openzwave-${PV}.tar.gz \
            file://main-support-mk.diff \
 "
 
-SRC_URI[md5sum] = "984d2202d2dbc010fb19e09b236408b9"
-SRC_URI[sha256sum] = "dc141ce510604381519ca8c5c8dfb70717bfab6b12bada0411625d277449641e"
+SRC_URI[md5sum] = "438cf4b2da4116de071abcb430d3a006"
+SRC_URI[sha256sum] = "042a4bbc12a7dc2175d0b8d5831e3ba36653557118a190de0450e486dac61d71"
 
 inherit autotools-brokensep pkgconfig systemd
 
